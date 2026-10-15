@@ -321,16 +321,67 @@ For the release zip, see the [user guide](docs/USER_GUIDE.md#1-installing).
 
 ## Roadmap
 
-| Capability | Where it goes |
-|---|---|
-| **Test mode** (scripted scenarios without X-Plane state; deferred from D) | A `SimDataSource` that replays recorded or scripted snapshots; the menu selects the source |
-| 3-D cockpit instrument | A host on the XPLM400 Avionics API calling the same `InstrumentRenderer` |
-| Companion desktop app / approach analytics | Stream `SimSnapshot` / `InstrumentState` (plain structs) over UDP/WebSocket; the nav log is already a structured trace |
-| Text-only supplementary overlay | A second renderer over `InstrumentState` |
-| Holding-pattern / procedure visualisation | New nav module and dial layer; the approach-plan reader already exists in `ApproachResolver` |
-| Copilot side, custom-avionics aircraft | `_copilot` dataref variants; per-aircraft `SimDataSource` adapters |
-| Non-OpenGL rendering | A Panel Graphics `Canvas` backend when Laminar ships it |
-| macOS / Linux | Platform defines and `mac_x64` / `lin_x64` folders; the code is already platform-neutral apart from the build script |
+## Development Roadmap
+
+### v1.1 — Validation & Testing
+- [ ] Implement a dedicated test mode using scripted or recorded `SimSnapshot` data.
+- [ ] Create repeatable IFR scenarios for course interception, overshoot, and glidepath tracking.
+- [ ] Expand in-simulator validation across aircraft types, navigation sources, wind conditions, and intercept angles.
+- [ ] Improve predictive guidance accuracy, uncertainty handling, and navigation-data validation.
+- [ ] Document prediction accuracy and known limitations.
+
+### v1.2 — Advanced Procedure Visualization
+Expand NavSight beyond final approach guidance to visualize holding patterns, DME arcs, and complex instrument procedure geometry.
+
+**Holding Pattern Visualization**
+- [ ] Display holding-pattern geometry, including inbound/outbound legs, holding fix, and turn direction.
+- [ ] Visualize direct, parallel, and teardrop holding entries.
+- [ ] Display the aircraft's current position and projected trajectory relative to the holding pattern.
+- [ ] Incorporate wind correction and drift prediction.
+- [ ] Anticipate inbound course interception, outbound timing, and upcoming turns.
+- [ ] Provide predictive guidance for maintaining the desired holding pattern.
+
+**DME Arc Visualization**
+- [ ] Display the desired DME arc relative to its navigation station.
+- [ ] Visualize aircraft position, ground track, and projected trajectory along the arc.
+- [ ] Calculate radial distance deviation from the selected arc radius.
+- [ ] Predict whether the aircraft is converging toward or diverging from the arc.
+- [ ] Anticipate arc interception and potential overshoot.
+- [ ] Visualize lead turns and transitions between the arc and subsequent approach segments.
+- [ ] Incorporate groundspeed, turn rate, and wind effects into trajectory prediction.
+
+**Procedure Integration**
+- [ ] Introduce dedicated display modes for holding patterns and DME arcs.
+- [ ] Expand `ApproachResolver` to identify supported procedure legs and geometry.
+- [ ] Allow manual procedure configuration when reliable simulator data is unavailable.
+- [ ] Add navigation validity checks and automated geometry tests for both procedure types.
+
+### v1.3 — Flight Performance Analytics
+- [ ] Record aircraft trajectories, navigation deviations, and instrument procedure events.
+- [ ] Develop a dedicated 2-D approach and procedure debriefing interface.
+- [ ] Calculate lateral and vertical tracking accuracy.
+- [ ] Identify course interception errors, overshoots, and unstable approach conditions.
+- [ ] Analyze holding-pattern accuracy and DME arc tracking performance.
+- [ ] Compare performance across navigation sources, procedures, and aircraft.
+- [ ] Export recorded flight data for external analysis and research.
+
+### v2.0 — Cockpit & Companion Application Integration
+- [ ] Develop a native 3-D cockpit instrument using the XPLM400 Avionics API.
+- [ ] Reuse the existing `InstrumentRenderer` through a dedicated avionics display host.
+- [ ] Create a companion desktop application for instrument configuration and flight analysis.
+- [ ] Implement UDP/WebSocket communication for streaming navigation and instrument state.
+- [ ] Develop a compact, text-only supplementary overlay for traditional cockpit instruments.
+- [ ] Support external monitors and home cockpit hardware.
+- [ ] Introduce customizable instrument layouts and display preferences.
+
+### Future Development — Compatibility & Research
+- [ ] Expand compatibility with custom avionics and aircraft-specific data sources.
+- [ ] Support copilot-side navigation data and independent instrument configurations.
+- [ ] Investigate alternative rendering backends, including the X-Plane Panel Graphics API.
+- [ ] Explore macOS and Linux compatibility.
+- [ ] Investigate advanced trajectory prediction incorporating aircraft performance characteristics.
+- [ ] Conduct human-factors research comparing conventional navigation instruments with NavSight.
+- [ ] Evaluate improvements in situational awareness, course interception accuracy, and pilot workload.
 
 ## Development notes
 
