@@ -1,0 +1,6 @@
+/build/
+# Downloaded X-Plane SDK (fetch with .\build.ps1 -FetchSdk)
+/third_party/XPSDK/
+.vs/
+*.user
+/dist/
