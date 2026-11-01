@@ -16,15 +16,19 @@ source and approach setup fit the procedure you're flying (§3, *Source check*).
 
 Requires X-Plane 12.4 or newer on Windows x64.
 
-**From the release zip.** Unzip `NavSight-<version>-win_x64.zip` and copy the
-`NavSight` folder into `<X-Plane 12>\Resources\plugins\`, so that you have:
+**From the release zip.** Download `NavSight-<version>-win_x64.zip` from the
+[Releases page](https://github.com/Rohank050505/NavSight/releases/latest),
+unzip it, and drag the `NavSight` folder into `<X-Plane 12>\Resources\plugins\`
+with X-Plane closed, so that you have:
 
 ```
 X-Plane 12\Resources\plugins\NavSight\win_x64\NavSight.xpl
 ```
 
-**From source.** Run `.\build.ps1 -Install` with X-Plane closed (see the
-README).
+To update, replace the folder with the new one.
+
+**From source.** Run `.\build.ps1 -Install` with X-Plane closed (see
+[BUILDING.md](BUILDING.md)).
 
 **Upgrading from SmartCDI.** NavSight was called SmartCDI before v0.3.0.
 - Delete `Resources\plugins\SmartCDI` (`-Install` does this for you).

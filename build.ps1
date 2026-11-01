@@ -4,11 +4,13 @@
 
 .DESCRIPTION
     Self-contained build: needs only Visual Studio (2022 or newer) with the
-    "Desktop development with C++" workload and the X-Plane SDK in
-    third_party\XPSDK (use -FetchSdk to download it). CMake is NOT required;
-    CMakeLists.txt is provided as an alternative for IDEs / CI.
+    "Desktop development with C++" workload. The X-Plane SDK is downloaded
+    into third_party\XPSDK on first use (-FetchSdk re-downloads it). CMake is
+    NOT required; CMakeLists.txt is provided as an alternative for IDEs / CI.
+    See docs\BUILDING.md.
 
 .EXAMPLE
+    .\build.ps1 -Install            # build and install into X-Plane (X-Plane closed)
     .\build.ps1                     # Release build -> build\Release\NavSight\win_x64\NavSight.xpl
     .\build.ps1 -Test               # also build + run host-side unit tests
     .\build.ps1 -Configuration Debug -Install
@@ -42,9 +44,8 @@ function Write-Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Initialize-Sdk {
     $marker = Join-Path $SdkDir 'CHeaders\XPLM\XPLMDefs.h'
     if ((Test-Path $marker) -and -not $FetchSdk) { return }
-    if (-not $FetchSdk) {
-        throw "X-Plane SDK not found at $SdkDir. Run '.\build.ps1 -FetchSdk' or extract XPSDK430.zip's SDK folder there."
-    }
+    # A fresh clone has no SDK: fetch it, so building from source is one command.
+    if (-not $FetchSdk) { Write-Step "X-Plane SDK not found in $SdkDir - downloading it (one time)" }
     Write-Step "Downloading X-Plane SDK from $SdkUrl"
     $tmp = Join-Path ([IO.Path]::GetTempPath()) ("xpsdk_" + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $tmp | Out-Null
@@ -177,9 +178,19 @@ if ($Package) {
     @"
 NavSight $version - predictive navigation instrument for X-Plane 12 (Windows x64)
 
-Install: copy this NavSight folder into  <X-Plane 12>\Resources\plugins\
-         (remove an older Resources\plugins\SmartCDI folder if present).
-Then:    Plugins > NavSight > Show Instrument.   See USER_GUIDE.md.
+INSTALL
+  1. Quit X-Plane.
+  2. Drag this whole NavSight folder into  <X-Plane 12>\Resources\plugins\
+     You should end up with:
+         X-Plane 12\Resources\plugins\NavSight\win_x64\NavSight.xpl
+  3. Start X-Plane and open  Plugins > NavSight > Show Instrument.
+
+UPDATE     Replace the NavSight folder with the new one.
+UNINSTALL  Delete Resources\plugins\NavSight.
+UPGRADING FROM SMARTCDI  Delete Resources\plugins\SmartCDI first.
+
+How to read the instrument: USER_GUIDE.md.
+Source code and issues: https://github.com/Rohank050505/NavSight
 
 NavSight is situational-awareness software for flight simulation only.
 It is not a certified avionics or flight-director product and must not be
