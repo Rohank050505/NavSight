@@ -54,9 +54,13 @@ function Initialize-Sdk {
         Invoke-WebRequest -Uri $SdkUrl -OutFile $zip -UseBasicParsing
         $extract = Join-Path $tmp 'x'
         New-Item -ItemType Directory -Path $extract | Out-Null
-        # macOS framework symlinks can't be created on Windows; tar reports them
-        # but the Windows headers/libs extract fine, so check for those instead.
-        & tar.exe -xf $zip -C $extract 2>$null
+        # Extract only what a Windows build needs. The macOS frameworks contain
+        # symlinks Windows can't create; tar reports them on stderr, which
+        # Windows PowerShell 5.1 would turn into a terminating error here.
+        $eap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try { & tar.exe -xf $zip -C $extract 'SDK/CHeaders' 'SDK/Libraries/Win' 2>&1 | Out-Null }
+        finally { $ErrorActionPreference = $eap }
         if (-not (Test-Path (Join-Path $extract 'SDK\Libraries\Win\XPLM_64.lib'))) { throw "SDK archive did not contain Windows libraries" }
         if (Test-Path $SdkDir) { Remove-Item $SdkDir -Recurse -Force }
         New-Item -ItemType Directory -Force -Path (Split-Path $SdkDir) | Out-Null
